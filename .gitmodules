@@ -1,0 +1,6 @@
+[submodule "submodules/teensy_loader_cli"]
+	path = submodules/teensy_loader_cli
+	url = https://github.com/itsermo/teensy_loader_cli.git
+[submodule "submodules/cmake-arm-embedded"]
+	path = submodules/cmake-arm-embedded
+	url = https://github.com/itsermo/cmake-arm-embedded.git
