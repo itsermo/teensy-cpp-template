@@ -1,8 +1,11 @@
-
 cmake_minimum_required(VERSION 3.10)
 
 # declare project name
 project(teensy-cpp VERSION 0.1 LANGUAGES C CXX ASM)
+
+# options
+option(PRINT_SIZE_INFO_AFTER_LINK "Prints verbose size info to stdout" ON)
+option(WAIT_TO_FLASH              "Waits on teensy detection to flash" ON)
 
 # set output path to /bin, /lib, etc.
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY${${CMAKE_BUILD_TYPE}} ${CMAKE_CURRENT_LIST_DIR}/bin)
@@ -13,9 +16,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY${${CMAKE_BUILD_TYPE}} ${CMAKE_CURRENT_LIST_DI
 # and the cmake arm embedded toolchain path
 set(TEENSY_LOADER_SUBMODULE_PATH      ${CMAKE_CURRENT_LIST_DIR}/submodules/teensy_loader_cli)
 set(CMAKE_ARM_EMBEDDED_SUBMODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/submodules/cmake-arm-embedded)
-
-# set the toolchain to the arm-none-eabi toolchain
-set(CMAKE_TOOLCHAIN_FILE CACHE INTERNAL "${CMAKE_ARM_EMBEDDED_SUBMODULE_PATH}/toolchain-arm-none-eabi.cmake")
 
 # set the linker script for our teensy 4.0 and include that beeoch's cmake toolchain flags
 set(LINKER_SCRIPT "${CMAKE_CURRENT_LIST_DIR}/etc/imxrt1062.ld")
@@ -56,9 +56,10 @@ target_sources(${PROJECT_NAME} PRIVATE
 
 include(${TEENSY_LOADER_SUBMODULE_PATH}/cmake/TeensyFlashTarget.cmake)
 if(WIN32)
-    get_filename_component(TEENSY_LOADER_COMMAND ${TEENSY_LOADER_SUBMODULE_PATH}/bin/teensy_loader_cli ABSOLUTE)
+    get_filename_component(TEENSY_LOADER_COMMAND ${TEENSY_LOADER_SUBMODULE_PATH}/bin/teensy_loader_cli.exe ABSOLUTE)
 else()
     get_filename_component(TEENSY_LOADER_COMMAND ${TEENSY_LOADER_SUBMODULE_PATH}/bin/teensy_loader_cli ABSOLUTE)
 endif()
-add_teensy_flash_target(${PROJECT_NAME} "TEENSY40" TRUE)
+
+add_teensy_flash_target(${PROJECT_NAME} "imxrt1062" ${WAIT_TO_FLASH})
 
