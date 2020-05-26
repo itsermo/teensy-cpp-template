@@ -1,12 +1,9 @@
-#include "imxrt1062.h"
+#include <imxrt1062.h>
+#include <imxrt1062-memory.h>
+
 #include <vector>
 #include <string>
 #include <map>
-
-// These functions come from memset.S and memcpy-armv7m.S
-// They are "fast" assembly implementations of memset and memcpy
-extern "C" void *memset(void *s, int c, size_t n);
-extern "C" void *memcpy (void *dst, const void *src, size_t count);
 
 int main(void)
 {
