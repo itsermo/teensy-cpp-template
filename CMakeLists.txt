@@ -28,7 +28,8 @@ set(IMXRT1062_SRC_DIR     ${CMAKE_CURRENT_LIST_DIR}/3rdparty/imxrt1062/src)
 add_library(imxrt1062 STATIC)
 target_include_directories(imxrt1062 PUBLIC ${IMXRT1062_INCLUDE_DIR})
 target_sources(imxrt1062 PUBLIC 
-    ${IMXRT1062_INCLUDE_DIR}/imxrt1062.h    # the MCU include file, this holds all the register definitions, etc.
+    ${IMXRT1062_INCLUDE_DIR}/imxrt1062.h        # the MCU include file, this holds all the register definitions, etc.
+    ${IMXRT1062_INCLUDE_DIR}/imxrt1062-memory.h # fast assembly-based definitions of memset() and memcpy()
 
     PRIVATE
     ${IMXRT1062_SRC_DIR}/memcpy-armv7m.S        # fast memcpy() replacement specific to armv7m architecture

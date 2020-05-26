@@ -1,5 +1,9 @@
+// 3rdparty MCU headers
 #include <imxrt1062.h>
 #include <imxrt1062-memory.h>
+
+// for delay() functions
+#include "../include/chrono.h"
 
 #include <vector>
 #include <string>
@@ -7,8 +11,9 @@
 
 int main(void)
 {
-    float x = 3.24f;
-    x++;
+    // enables the debug register for cycle counting (used in delay_ms())
+    init_demcr();
+
     // Create a vector of 256 bytes -- proof we can use STL!
     std::vector<uint8_t> test_vector(256);
 
@@ -34,25 +39,15 @@ int main(void)
     GPIO7_GDIR |= (1 << 3);
 
     for(;;) {
-        volatile unsigned int i = 0;
-
         // Set PIN 13 HIGH
         GPIO7_DR_SET = (1 << 3);
 
-        // Poor man's delay
-        while(i < 10000000) {
-            i++;
-        }
-
-        i = 0;
+        delay_ms(100);
 
         // Set PIN 13 LOW
         GPIO7_DR_CLEAR = (1 << 3);
 
-        // Poor man's delay
-        while(i < 10000000) {
-            i++;
-        }
+        delay_ms(100);
     }
 
     return 0;
