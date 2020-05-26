@@ -4,6 +4,11 @@ cmake_minimum_required(VERSION 3.10)
 # declare project name
 project(teensy-cpp VERSION 0.1 LANGUAGES C CXX ASM)
 
+# set output path to /bin, /lib, etc.
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY${${CMAKE_BUILD_TYPE}} ${CMAKE_CURRENT_LIST_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY${${CMAKE_BUILD_TYPE}} ${CMAKE_CURRENT_LIST_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY${${CMAKE_BUILD_TYPE}} ${CMAKE_CURRENT_LIST_DIR}/lib)
+
 # set the paths for our teensy firmware loader
 # and the cmake arm embedded toolchain path
 set(TEENSY_LOADER_SUBMODULE_PATH      ${CMAKE_CURRENT_LIST_DIR}/submodules/teensy_loader_cli)
@@ -22,8 +27,10 @@ set(IMXRT1062_SRC_DIR     ${CMAKE_CURRENT_LIST_DIR}/3rdparty/imxrt1062/src)
 # create a library from a 3rdparty code
 add_library(imxrt1062 STATIC)
 target_include_directories(imxrt1062 PUBLIC ${IMXRT1062_INCLUDE_DIR})
-target_sources(imxrt1062 PRIVATE 
+target_sources(imxrt1062 PUBLIC 
     ${IMXRT1062_INCLUDE_DIR}/imxrt1062.h    # the MCU include file, this holds all the register definitions, etc.
+
+    PRIVATE
     ${IMXRT1062_SRC_DIR}/memcpy-armv7m.S        # fast memcpy() replacement specific to armv7m architecture
     ${IMXRT1062_SRC_DIR}/memset.S               # fast memset() replacement specific to arm architecture
 )
@@ -48,6 +55,10 @@ target_sources(${PROJECT_NAME} PRIVATE
 )
 
 include(${TEENSY_LOADER_SUBMODULE_PATH}/cmake/TeensyFlashTarget.cmake)
-get_filename_component(TEENSY_LOADER_COMMAND ${TEENSY_LOADER_SUBMODULE_PATH}/bin/macos-x86_64/teensy_loader_cli ABSOLUTE)
+if(WIN32)
+    get_filename_component(TEENSY_LOADER_COMMAND ${TEENSY_LOADER_SUBMODULE_PATH}/bin/teensy_loader_cli ABSOLUTE)
+else()
+    get_filename_component(TEENSY_LOADER_COMMAND ${TEENSY_LOADER_SUBMODULE_PATH}/bin/teensy_loader_cli ABSOLUTE)
+endif()
 add_teensy_flash_target(${PROJECT_NAME} "TEENSY40" TRUE)
 
