@@ -51,7 +51,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     ${PROJ_SRC_DIR}/teensy/startup.c        # the first C code that is run on the MCU, calls main()
 
     ${PROJ_SRC_DIR}/teensy/cpp-compat.cpp   # adds some missing primitive C++ functions
-    ${PROJ_INCLUDE_DIR}/chrono.h            # adds some primitive timer/delay functions based on CPU counter
+    ${PROJ_INCLUDE_DIR}/imxrt1062-chrono.h            # adds some primitive timer/delay functions based on CPU counter
     ${PROJ_SRC_DIR}/main.cpp                # our hello world code
 )
 

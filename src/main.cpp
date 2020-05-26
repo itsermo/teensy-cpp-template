@@ -3,7 +3,7 @@
 #include <imxrt1062-memory.h>
 
 // for delay() functions
-#include "../include/chrono.h"
+#include <imxrt1062-chrono.h>
 
 #include <vector>
 #include <string>
@@ -11,7 +11,7 @@
 
 int main(void)
 {
-    // enables the debug register for cycle counting (used in delay_ms())
+    // enables the debug register for cycle counting, used in function delay_ms()
     init_demcr();
 
     // Create a vector of 256 bytes -- proof we can use STL!
