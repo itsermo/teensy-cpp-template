@@ -34,7 +34,7 @@ The project consists of 3 components:
     * **build**    - Convenience scripts that call the `cmake` command using proper arguments to generate a project, build and flash the binary to your Teensy 4.0 device
     
 2. The loader:
-    * **submodules/teensy_loader_cli** - The code for the loader.
+    * **submodules/teensy_loader_cli** - The code for the loader.  
     This must be properly setup by placing an executable binary in the `submodules/teensy_loader_cli/bin` subfolder if you plan on actually *using* the code you've compiled for Teensy 4.0
         
 3. The CMake toolchain:
