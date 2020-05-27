@@ -36,7 +36,11 @@ The project consists of 3 components:
 3. The CMake toolchain:
     * **submodules/cmake-arm-embedded** A GCC for Embedded ARM CMake Toolchain.
     This is just reference code that the CMakeLists.txt file uses to generate the project.
-        
+
+When cloning this repo, please do so **RECURSIVELY** so that the submodules get cloned as well:
+
+        git clone --recursive https://github.com/itsermo/teensy-cpp-template
+ 
 ## Getting Started (Windows) 
 
 ### Prerequisites
@@ -46,6 +50,14 @@ To compile and run code on the Teensy 4.0, you will first need to do 3 things on
 1. Install the [GNU Arm Embedded Toolchain](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads)
 2. Install the latest [CMake](https://cmake.org/download/) and make sure the `cmake` command is in your path
 3. Install [MinGW](http://www.mingw.org/) - this is needed for compiling Unix Makefiles
+
+### Setup teensy_loader_cli
+
+To enable the loading of compiled code to the Teensy, you will need to resolve the `submodules\teensy_loader_cli\bin\teensy_loader_cli.exe` binary path with an .exe of teensy_loader_cli compiled for your Windows architecture.
+
+You can copy the appropriate `teensy_loader_cli.exe` for your development PC's architecture into the `bin` parent folder.  For example, if your development PC is x86_64 (most common) you would run the command:
+
+         copy submodules\teensy_loader_cli\bin\win-x86_64\teensy_loader_cli.exe submodules\teensy_loader_cli\bin
 
 ## Getting Started (macOS)  
 
@@ -69,6 +81,10 @@ You can install these components manually:
 1. [GNU Arm Embedded Toolchain](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads)
 2. [CMake](https://cmake.org/download/) and make sure the `cmake` command is in your path
 3. [XCode](https://apps.apple.com/us/app/xcode/id497799835?mt=12) - Open the XCode app and install the additional command-line tools. This is needed for compiling Unix Makefiles (and actually, the XCode command-line tools are technically all that is needed, not the XCode app itself)
+
+### Link teensy_loader_cli
+
+In order to load the generated .hex file with your IDE, you will need to resolve the proper `teensy_loader_cli` binary for your development architecture and link it to `submodules/teensy_loader_cli/bin/teensy_loader_cli`.
 
 ## Getting Started (Linux)  
 
@@ -95,11 +111,7 @@ You can install these components manually:
 
 Now you're ready to start coding! 
 
-1. First step is to clone this repo **RECURSIVELY** so that the submodules get cloned as well:
-
-        git clone --recursive https://github.com/itsermo/teensy-cpp-template
-
-2. A simple script is provided to generate the project (macOS & Linux): 
+1. A simple script is provided to generate the project (macOS & Linux): 
 
         cd teensy-cpp-template/build
         ./generate.sh 
@@ -110,7 +122,7 @@ Now you're ready to start coding!
          generate.bat
     
         
-3. Build using the command (macOS & Linux):
+2. Build using the command (macOS & Linux):
 
         ./build.sh  
             
@@ -118,7 +130,7 @@ Now you're ready to start coding!
    
          build.bat
         
-4. Finally you can load the program onto your Teensy 4.0 device using the command:
+3. Finally you can load the program onto your Teensy 4.0 device using the command:
 
         ./flash.sh
         
