@@ -111,7 +111,7 @@ You can install these components manually:
 
 ### Setup teensy_loader_cli
 
-To enable the loading of compiled code to the Teensy, you will need to resolve the `submodules\teensy_loader_cli\bin\teensy_loader_cli` binary path with a binary of `teensy_loader_cli` compiled for linux.
+To enable the loading of compiled code to the Teensy, you will need to resolve the `submodules/teensy_loader_cli/bin/teensy_loader_cli` binary path with a binary of `teensy_loader_cli` compiled for linux.
 
 Unfortunately, on Linux it is difficult to package this binary so it must be done by compiling the `teensy_loader_cli` command from scratch.  This depends on libusb.
 
@@ -165,3 +165,29 @@ Now you're ready to start coding!
 *NOTE: If you run `build.sh`, it will automatically generate a new project, if necessary, by calling `generate.sh` first.  
 Likewise, `flash.sh` will call `generate.sh`, then `build.sh` and load your program onto the Teensy 4.0 using `teensy_loader_cli` binary in `submodules/teensy_loader_cli/bin` folder!*
     
+## Creating Your Own CMake Project
+
+Create your CMake project as you normally would, adding these two lines somwhere towards the top of your `CMakeLists.txt` file:
+
+         # set the linker script for our teensy 4.0 and include that beeoch's cmake toolchain flags
+         set(LINKER_SCRIPT "${CMAKE_CURRENT_LIST_DIR}/etc/imxrt1062.ld")
+         include(${CMAKE_ARM_EMBEDDED_SUBMODULE_PATH}/teensy40.cmake)
+         
+Instead of using the `add_exectuable()` command, use `add_embedded_arm_executable()` instead:
+
+         add_embedded_arm_executable(project_name)
+         
+This will generate a custom command that will perform an object dump, seperating the generated .elf code into .hex, .lst and .dst files.
+
+Finally, to add a target that will load your code, you must set the `TEENSY_LOADER_COMMAND` filepath to point to `teensy_loader_cli` binary, and then you can use the `add_teensy_flash_target(target_name mcu wait)` function to generate the flash target for your project:
+
+      include(${TEENSY_LOADER_SUBMODULE_PATH}/cmake/TeensyFlashTarget.cmake)
+      if(WIN32)
+         get_filename_component(TEENSY_LOADER_COMMAND ${TEENSY_LOADER_SUBMODULE_PATH}/bin/teensy_loader_cli.exe ABSOLUTE)
+      else()
+         get_filename_component(TEENSY_LOADER_COMMAND ${TEENSY_LOADER_SUBMODULE_PATH}/bin/teensy_loader_cli ABSOLUTE)
+      endif()
+
+      add_teensy_flash_target(project_name "imxrt1062" ${WAIT_TO_FLASH})
+      
+This will generate a `flash-teensy` target, and add a command to flash your project by calling the `teensy_loader_cli` command
