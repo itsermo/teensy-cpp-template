@@ -82,9 +82,11 @@ You can install these components manually:
 2. [CMake](https://cmake.org/download/) and make sure the `cmake` command is in your path
 3. [XCode](https://apps.apple.com/us/app/xcode/id497799835?mt=12) - Open the XCode app and install the additional command-line tools. This is needed for compiling Unix Makefiles (and actually, the XCode command-line tools are technically all that is needed, not the XCode app itself)
 
-### Link teensy_loader_cli
+### Setup teensy_loader_cli
 
-In order to load the generated .hex file with your IDE, you will need to resolve the proper `teensy_loader_cli` binary for your development architecture and link it to `submodules/teensy_loader_cli/bin/teensy_loader_cli`.
+To enable the loading of compiled code to the Teensy, you will need to resolve the `submodules\teensy_loader_cli\bin\teensy_loader_cli` binary path with a binary of `teensy_loader_cli` compiled for macOS.
+
+         ln -s submodules/teensy_loader_cli/bin/macos-x86_64/teensy_loader_cli submodules/teensy_loader_cli/bin/teensy_loader_cli
 
 ## Getting Started (Linux)  
 
@@ -106,6 +108,28 @@ You can install these components manually:
 
 1. [GNU Arm Embedded Toolchain](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads)
 2. [CMake](https://cmake.org/download/) and make sure the `cmake` command is in your path
+
+### Setup teensy_loader_cli
+
+To enable the loading of compiled code to the Teensy, you will need to resolve the `submodules\teensy_loader_cli\bin\teensy_loader_cli` binary path with a binary of `teensy_loader_cli` compiled for linux.
+
+Unfortunately, on Linux it is difficult to package this binary so it must be done by compiling the `teensy_loader_cli` command from scratch.  This depends on libusb.
+
+On Ubuntu, you would install the following:
+
+      sudo apt install build-essential cmake libusb-dev
+
+On Fedora:
+
+      sudo dnf install cmake libusb-devel libusb-compat
+      
+Then from the cloned repo folder, build the submodule:  
+
+      cd submodules/teensy_loader_cli/
+      cmake -B build-linux
+      cmake --build ./build-linux --config Release
+      
+This should compile and place the proper binary in the `bin` subfolder of the `teensy_loader_cli` submodule.
 
 ## Compiling and Loading
 
