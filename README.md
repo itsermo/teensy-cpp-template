@@ -18,6 +18,10 @@ I chose CMake because it's what I'm familiar with. I like to switch between macO
 - [ ] TODO: Easy onboarding to build and load your first bit of code
 - [ ] TODO: Easy debugging with JTAG instrument (seems to not be possible at the moment)
 
+When cloning this repo, please do so **RECURSIVELY** so that the submodules get cloned as well:
+
+        git clone --recursive https://github.com/itsermo/teensy-cpp-template
+
 ## Project Layout
 
 The project consists of 3 components:
@@ -36,10 +40,6 @@ The project consists of 3 components:
 3. The CMake toolchain:
     * **submodules/cmake-arm-embedded** A GCC for Embedded ARM CMake Toolchain.
     This is just reference code that the CMakeLists.txt file uses to generate the project.
-
-When cloning this repo, please do so **RECURSIVELY** so that the submodules get cloned as well:
-
-        git clone --recursive https://github.com/itsermo/teensy-cpp-template
  
 ## Getting Started (Windows) 
 
@@ -111,9 +111,9 @@ You can install these components manually:
 
 ### Setup teensy_loader_cli
 
-To enable the loading of compiled code to the Teensy, you will need to resolve the `submodules/teensy_loader_cli/bin/teensy_loader_cli` binary path with a binary of `teensy_loader_cli` compiled for linux.
+To enable the loading of compiled code to the Teensy, you will need to resolve the `submodules/teensy_loader_cli/bin/teensy_loader_cli` binary path with a binary of `teensy_loader_cli` compiled for your Linux distribution.
 
-Unfortunately, on Linux it is difficult to package this binary so it must be done by compiling the `teensy_loader_cli` command from scratch.  This depends on libusb.
+Unfortunately, on Linux it is difficult to package this binary in a standalone fashion, so it must be done by compiling the `teensy_loader_cli` command from scratch.  This depends on libusb.
 
 On Ubuntu, you would install the following:
 
@@ -131,7 +131,7 @@ Then from the cloned repo folder, build the submodule:
       
 This should compile and place the proper binary in the `bin` subfolder of the `teensy_loader_cli` submodule.
 
-## Compiling and Loading
+## Compiling and Loading Teensy C++ Code
 
 Now you're ready to start coding! 
 
@@ -164,6 +164,20 @@ Now you're ready to start coding!
         
 *NOTE: If you run `build.sh`, it will automatically generate a new project, if necessary, by calling `generate.sh` first.  
 Likewise, `flash.sh` will call `generate.sh`, then `build.sh` and load your program onto the Teensy 4.0 using `teensy_loader_cli` binary in `submodules/teensy_loader_cli/bin` folder!*
+
+### Explanation
+
+The CMake project generates 3 targets:  
+
+   * **teensy-cpp-template** - The main project, containing your `main.cpp` file and all boot code in `src` & `include` path
+   * **imxrt1062** - A static library containing some basic 3rdparty imxrt1062 header files, optimized `memset()` and `memcpy()` functions and C++ compatibility functions
+   * **flash-teensy** - A target that, when run, will depend on **teensy-cpp-template** to be built, and then will load the code onto your Teensy device
+   
+These can be viewed and built as projects in your IDE workspace/solution, or using the make command, from the build folder.  For example:
+
+      make flash-teensy
+      
+Will build the **flash-teensy** target, which in turn will compile the **teensy-cpp-template**, which will compile and link with **imxrt1062**
     
 ## Creating Your Own CMake Project
 
