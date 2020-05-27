@@ -35,7 +35,7 @@ The project consists of 3 components:
     
 2. The loader:
     * **submodules/teensy_loader_cli** - The code for the loader.
-    This must be properly compiled if you plan on actually *using* the code you've compiled on your Teensy 4.0
+    This must be properly setup by placing an executable binary in the `submodules/teensy_loader_cli/bin` subfolder if you plan on actually *using* the code you've compiled for Teensy 4.0
         
 3. The CMake toolchain:
     * **submodules/cmake-arm-embedded** A GCC for Embedded ARM CMake Toolchain.
