@@ -1,7 +1,7 @@
 # teensy-cpp-template
-teensy-cpp-template aims to be a bare hello-world lightweight starter project for Teensy 4.0 that supports modern C++, yet also gives the developer flexibility to use an IDE & OS of his or her choice.
+teensy-cpp-template aims to be a lightweight modern C++ hello-world starter project for Teensy 4.0 that.  The project supports modern C++17, C99, ASM and yet also gives the developer flexibility to use an IDE & OS of his or her choice.
 
-People who have used C++ with CMake extensively to write cross-platform code will feel right at home using this approach.
+People who have used C++ with CMake extensively to write cross-platform code will feel right at home using this approach to write code for Teensy 4.0.
 
 ## Why CMake?
 I chose CMake because it's what I'm familiar with. I like to switch between macOS, Linux and Windows frequently, I use multiple IDEs on a daily basis, and I couldn't find any other C++17 bare metal templates for Teensy 4.0.
