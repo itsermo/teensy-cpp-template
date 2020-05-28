@@ -4,8 +4,21 @@ cmake_minimum_required(VERSION 3.10)
 project(teensy-cpp VERSION 0.1 LANGUAGES C CXX ASM)
 
 # options
-option(PRINT_SIZE_INFO_AFTER_LINK "Prints verbose size info to stdout" ON)
-option(WAIT_TO_FLASH              "Waits on teensy detection to flash" ON)
+option(PRINT_SIZE_INFO_AFTER_LINK    "Prints verbose size info to stdout"       ON)
+
+# Teensy Loader CLI command arguments options
+option(TEENSY_LOADER_WAIT_TO_FLASH   "Waits on Teensy detection to flash"       ON)
+option(TEENSY_LOADER_USE_HARD_REBOOT "Use hard reboot if Teensy is not online" OFF)
+option(TEENSY_LOADER_USE_SOFT_REBOOT "Use soft reboot if device is not online" OFF)
+option(TEENSY_LOADER_NO_REBOOT       "Do not reboot Teensy after programming"  OFF)
+option(TEENSY_LOADER_BOOT_ONLY       "Boot Teensy only, do not program"        OFF)
+option(TEENSY_LOADER_VERBOSE         "Enables or disables verbose output"       ON) 
+
+# how to generate the flash command
+# POST_BUILD     - adds a post-build command to your executable
+# UTILITY_TARGET - creates a utility target with a post-build command
+# NONE           - does not generate a flash command
+set(TEENSY_LOADER_CLI_GENERATOR_TYPE "UTILITY_TARGET")
 
 # set output path to /bin, /lib, etc.
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY${${CMAKE_BUILD_TYPE}} ${CMAKE_CURRENT_LIST_DIR}/bin)
@@ -55,12 +68,36 @@ target_sources(${PROJECT_NAME} PRIVATE
     ${PROJ_SRC_DIR}/main.cpp                # our hello world code
 )
 
-include(${TEENSY_LOADER_SUBMODULE_PATH}/cmake/TeensyFlashTarget.cmake)
-if(WIN32)
-    get_filename_component(TEENSY_LOADER_COMMAND ${TEENSY_LOADER_SUBMODULE_PATH}/bin/teensy_loader_cli.exe ABSOLUTE)
-else()
-    get_filename_component(TEENSY_LOADER_COMMAND ${TEENSY_LOADER_SUBMODULE_PATH}/bin/teensy_loader_cli ABSOLUTE)
-endif()
+if("${TEENSY_LOADER_CLI_GENERATOR_TYPE}" STREQUAL "POST_BUILD" OR "${TEENSY_LOADER_CLI_GENERATOR_TYPE}" STREQUAL "UTILITY_TARGET")
+    include(${TEENSY_LOADER_SUBMODULE_PATH}/cmake/TeensyFlashTarget.cmake)
+    if(WIN32)
+        get_filename_component(TEENSY_LOADER_COMMAND ${TEENSY_LOADER_SUBMODULE_PATH}/bin/teensy_loader_cli.exe ABSOLUTE)
+    else()
+        get_filename_component(TEENSY_LOADER_COMMAND ${TEENSY_LOADER_SUBMODULE_PATH}/bin/teensy_loader_cli ABSOLUTE)
+    endif()
 
-add_teensy_flash_target(${PROJECT_NAME} "imxrt1062" ${WAIT_TO_FLASH})
+    if("${TEENSY_LOADER_CLI_GENERATOR_TYPE}" STREQUAL "UTILITY_TARGET")
+        add_teensy_flash_target(
+            ${PROJECT_NAME}
+            "imxrt1062"
+            ${TEENSY_LOADER_WAIT_TO_FLASH}
+            ${TEENSY_LOADER_USE_HARD_REBOOT}
+            ${TEENSY_LOADER_USE_SOFT_REBOOT}
+            ${TEENSY_LOADER_NO_REBOOT}
+            ${TEENSY_LOADER_BOOT_ONLY}
+            ${TEENSY_LOADER_VERBOSE}
+        )
+    elseif("${TEENSY_LOADER_CLI_GENERATOR_TYPE}" STREQUAL "POST_BUILD")
+        add_teensy_flash_command(
+            ${PROJECT_NAME}
+            "imxrt1062"
+            ${TEENSY_LOADER_WAIT_TO_FLASH}
+            ${TEENSY_LOADER_USE_HARD_REBOOT}
+            ${TEENSY_LOADER_USE_SOFT_REBOOT}
+            ${TEENSY_LOADER_NO_REBOOT}
+            ${TEENSY_LOADER_BOOT_ONLY}
+            ${TEENSY_LOADER_VERBOSE}
+        )
+    endif()
+endif()
 
