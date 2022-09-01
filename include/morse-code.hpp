@@ -15,50 +15,49 @@ namespace morse {
     };
 
     using morse_map = std::map<char, std::vector<symbol>>;
+    static const morse_map MORSE_ALPHABET_MAP {
+        // A-Z Alphabet
+        { 'A', { dot , dash             } }, // A .-
+        { 'B', { dash, dot , dot , dot  } }, // B -...
+        { 'C', { dash, dot , dash, dot  } }, // C -.-.
+        { 'D', { dash, dot , dot        } }, // D -..
+        { 'E', { dot                    } }, // E .
+        { 'F', { dot , dot , dash, dot  } }, // F ..-.
+        { 'G', { dash, dash, dot        } }, // G --.
+        { 'H', { dot , dot , dot , dot  } }, // H ....
+        { 'I', { dot , dot              } }, // I ..
+        { 'J', { dot , dash, dash, dash } }, // J .---
+        { 'K', { dash, dot , dash       } }, // K -.-
+        { 'L', { dot , dash, dot , dot  } }, // L .-..
+        { 'M', { dash, dash             } }, // M --
+        { 'N', { dash, dot              } }, // N -.
+        { 'O', { dash, dash, dash       } }, // O ---
+        { 'P', { dot , dash, dash, dot  } }, // P .--.
+        { 'Q', { dash, dash, dot , dash } }, // Q --.-
+        { 'R', { dot , dash, dot        } }, // R .-.
+        { 'S', { dot , dot , dot        } }, // S ...
+        { 'T', { dash                   } }, // T -
+        { 'U', { dot , dot , dash       } }, // U ..-
+        { 'V', { dot , dot , dot , dash } }, // V ...-
+        { 'W', { dot , dash, dash       } }, // W .--
+        { 'X', { dash, dot , dot , dash } }, // X -..-
+        { 'Y', { dash, dot , dash, dash } }, // Y -.--
+        { 'Z', { dash, dash, dot , dot  } }, // Z --..
+
+        // 0-9 Numerics
+        { '0', { dash, dash, dash, dash, dash } }, // 0 -----
+        { '1', { dot , dash, dash, dash, dash } }, // 1 .----
+        { '2', { dot , dot , dash, dash, dash } }, // 2 ..---
+        { '3', { dot , dot , dot , dash, dash } }, // 3 ...--
+        { '4', { dot , dot , dot , dot , dash } }, // 4 ....-
+        { '5', { dot , dot , dot , dot , dot  } }, // 5 .....
+        { '6', { dash, dot , dot , dot , dot  } }, // 6 -....
+        { '7', { dash, dash, dot , dot , dot  } }, // 7 --...
+        { '8', { dash, dash, dash, dot , dot  } }, // 8 ---..
+        { '9', { dash, dash, dash, dash, dot  } }, // 9 ----.
+    };
 
     inline std::vector<bool> convert_string_to_morse_binary_sequence(std::string & str){
-            const morse_map MORSE_ALPHABET_MAP {
-            // A-Z Alphabet
-            { 'A', { dot , dash             } }, // A .-
-            { 'B', { dash, dot , dot , dot  } }, // B -...
-            { 'C', { dash, dot , dash, dot  } }, // C -.-.
-            { 'D', { dash, dot , dot        } }, // D -..
-            { 'E', { dot                    } }, // E .
-            { 'F', { dot , dot , dash, dot  } }, // F ..-.
-            { 'G', { dash, dash, dot        } }, // G --.
-            { 'H', { dot , dot , dot , dot  } }, // H ....
-            { 'I', { dot , dot              } }, // I ..
-            { 'J', { dot , dash, dash, dash } }, // J .---
-            { 'K', { dash, dot , dash       } }, // K -.-
-            { 'L', { dot , dash, dot , dot  } }, // L .-..
-            { 'M', { dash, dash             } }, // M --
-            { 'N', { dash, dot              } }, // N -.
-            { 'O', { dash, dash, dash       } }, // O ---
-            { 'P', { dot , dash, dash, dot  } }, // P .--.
-            { 'Q', { dash, dash, dot , dash } }, // Q --.-
-            { 'R', { dot , dash, dot        } }, // R .-.
-            { 'S', { dot , dot , dot        } }, // S ...
-            { 'T', { dash                   } }, // T -
-            { 'U', { dot , dot , dash       } }, // U ..-
-            { 'V', { dot , dot , dot , dash } }, // V ...-
-            { 'W', { dot , dash, dash       } }, // W .--
-            { 'X', { dash, dot , dot , dash } }, // X -..-
-            { 'Y', { dash, dot , dash, dash } }, // Y -.--
-            { 'Z', { dash, dash, dot , dot  } }, // Z --..
-
-            // 0-9 Numerics
-            { '0', { dash, dash, dash, dash, dash } }, // 0 -----
-            { '1', { dot , dash, dash, dash, dash } }, // 1 .----
-            { '2', { dot , dot , dash, dash, dash } }, // 2 ..---
-            { '3', { dot , dot , dot , dash, dash } }, // 3 ...--
-            { '4', { dot , dot , dot , dot , dash } }, // 4 ....-
-            { '5', { dot , dot , dot , dot , dot  } }, // 5 .....
-            { '6', { dash, dot , dot , dot , dot  } }, // 6 -....
-            { '7', { dash, dash, dot , dot , dot  } }, // 7 --...
-            { '8', { dash, dash, dash, dot , dot  } }, // 8 ---..
-            { '9', { dash, dash, dash, dash, dot  } }, // 9 ----.
-        };
-
         // reserve 2 bits for each unit
         // up to 5 symbols (dot or dash) per letter
         // worst case is 5 dashes

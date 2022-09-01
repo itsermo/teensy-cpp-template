@@ -1,8 +1,6 @@
-//#include "imxrt.h"
-
 #include <stdint.h>
 
-extern void startup(void);
+extern void ResetHandler(void);
 extern unsigned long _estack;
 extern unsigned long _flashimagelen;
 
@@ -23,7 +21,7 @@ const uint32_t hab_csf[768];	// placeholder for HAB signature
 __attribute__ ((section(".ivt"), used))
 const uint32_t ImageVectorTable[8] = {
 	0x432000D1,		// header
-	(uint32_t)&startup,// program entry
+	(uint32_t)&ResetHandler,// program entry
 	0,			// reserved
 	0,			// dcd
 	(uint32_t)BootData,	// abs address of boot data
@@ -61,15 +59,15 @@ uint32_t FlexSPI_NOR_Config[128] = {
 	0,			// reserved
 	0,			// reserved
 
-//#if defined(ARDUINO_TEENSY40)
-//	0x00200000,		// sflashA1Size			0x50
-//#elif defined(ARDUINO_TEENSY41)
+#if defined(TEENSY40)
+	0x00200000,		// sflashA1Size			0x50
+#elif defined(TEENSY41)
 	0x00800000,		// sflashA1Size			0x50
-//#elif defined(ARDUINO_TEENSY_MICROMOD)
-//	0x01000000,		// sflashA1Size			0x50
-//#else
-//#error "Unknow flash chip size";
-//#endif
+#elif defined(TEENSY_MICROMOD)
+	0x01000000,		// sflashA1Size			0x50
+#else
+#error "Unknow flash chip size";
+#endif
 	0,			// sflashA2Size
 	0,			// sflashB1Size
 	0,			// sflashB2Size

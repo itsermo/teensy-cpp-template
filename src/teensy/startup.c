@@ -13,11 +13,12 @@ extern unsigned long _estack;
 
 static void memory_copy(uint32_t *dest, const uint32_t *src, uint32_t *dest_end);
 static void memory_clear(uint32_t *dest, uint32_t *dest_end);
+extern void __libc_init_array(void); // C++ standard library
 
 int main();
 
 __attribute__((section(".startup"), optimize("no-tree-loop-distribute-patterns"), naked))
-void startup()
+void ResetHandler()
 {
     // FlexRAM bank configuration
     IOMUXC_GPR_GPR17 = (uint32_t)&_flexram_bank_config;
@@ -32,6 +33,7 @@ void startup()
 
     // enable FPU
     // SCB_CPACR = 0x00F00000;
+	__libc_init_array();
 
     // Call the `main()` function defined in `main.c`.
     main();
