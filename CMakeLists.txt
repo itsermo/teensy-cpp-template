@@ -31,23 +31,10 @@ set(TEENSY_LOADER_SUBMODULE_PATH      ${CMAKE_CURRENT_LIST_DIR}/submodules/teens
 set(CMAKE_ARM_EMBEDDED_SUBMODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/submodules/cmake-arm-embedded)
 
 # set the linker script for our teensy 4.0 and include that beeoch's cmake toolchain flags
-set(LINKER_SCRIPT "${CMAKE_CURRENT_LIST_DIR}/etc/imxrt1062.ld")
-include(${CMAKE_ARM_EMBEDDED_SUBMODULE_PATH}/teensy40.cmake)
+set(LINKER_SCRIPT "${CMAKE_CURRENT_LIST_DIR}/etc/imxrt1062_t41.ld")
+include(${CMAKE_ARM_EMBEDDED_SUBMODULE_PATH}/teensy41.cmake)
 
-set(IMXRT1062_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/3rdparty/imxrt1062/include)
-set(IMXRT1062_SRC_DIR     ${CMAKE_CURRENT_LIST_DIR}/3rdparty/imxrt1062/src)
-
-# create a library from a 3rdparty code
-add_library(imxrt1062 STATIC)
-target_include_directories(imxrt1062 PUBLIC ${IMXRT1062_INCLUDE_DIR})
-target_sources(imxrt1062 PUBLIC 
-    ${IMXRT1062_INCLUDE_DIR}/imxrt1062.h        # the MCU include file, this holds all the register definitions, etc.
-    ${IMXRT1062_INCLUDE_DIR}/imxrt1062-memory.h # fast assembly-based definitions of memset() and memcpy()
-
-    PRIVATE
-    ${IMXRT1062_SRC_DIR}/memcpy-armv7m.S        # fast memcpy() replacement specific to armv7m architecture
-    ${IMXRT1062_SRC_DIR}/memset.S               # fast memset() replacement specific to arm architecture
-)
+add_subdirectory(3rdparty/imxrt1062)
 
 # add our executable
 add_embedded_arm_executable(${PROJECT_NAME})
@@ -64,7 +51,8 @@ target_sources(${PROJECT_NAME} PRIVATE
     ${PROJ_SRC_DIR}/teensy/startup.c        # the first C code that is run on the MCU, calls main()
 
     ${PROJ_SRC_DIR}/teensy/cpp-compat.cpp   # adds some missing primitive C++ functions
-    ${PROJ_INCLUDE_DIR}/imxrt1062-chrono.h            # adds some primitive timer/delay functions based on CPU counter
+    ${PROJ_INCLUDE_DIR}/imxrt1062-chrono.h  # adds some primitive timer/delay functions based on CPU counter
+    ${PROJ_INCLUDE_DIR}/morse-code.hpp      # morse code table
     ${PROJ_SRC_DIR}/main.cpp                # our hello world code
 )
 

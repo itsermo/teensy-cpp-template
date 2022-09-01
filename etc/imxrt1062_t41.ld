@@ -3,7 +3,8 @@ MEMORY
 	ITCM (rwx):  ORIGIN = 0x00000000, LENGTH = 512K
 	DTCM (rwx):  ORIGIN = 0x20000000, LENGTH = 512K
 	RAM (rwx):   ORIGIN = 0x20200000, LENGTH = 512K
-	FLASH (rwx): ORIGIN = 0x60000000, LENGTH = 1984K
+	FLASH (rwx): ORIGIN = 0x60000000, LENGTH = 7936K
+	ERAM (rwx):  ORIGIN = 0x70000000, LENGTH = 16384K
 }
 
 ENTRY(ImageVectorTable)
@@ -52,10 +53,10 @@ SECTIONS
 	} > ITCM  AT> FLASH
 
 	.data : {
-    		*(.endpoint_queue)    
+		*(.endpoint_queue)   
 		*(SORT_BY_ALIGNMENT(SORT_BY_NAME(.rodata*)))
 		*(SORT_BY_ALIGNMENT(SORT_BY_NAME(.data*)))
-   		 KEEP(*(.vectorsram))
+		KEEP(*(.vectorsram))
 	} > DTCM  AT> FLASH
 
 	.bss ALIGN(4) : {
@@ -70,6 +71,11 @@ SECTIONS
 		*(.dmabuffers)
 		. = ALIGN(32);
 	} > RAM
+
+	.bss.extram (NOLOAD) : {
+		*(SORT_BY_ALIGNMENT(SORT_BY_NAME(.externalram)))
+		. = ALIGN(32);
+	} > ERAM
 
 	.text.csf : {
 		FILL(0xFF)
@@ -92,12 +98,15 @@ SECTIONS
 	_heap_start = ADDR(.bss.dma) + SIZEOF(.bss.dma);
 	_heap_end = ORIGIN(RAM) + LENGTH(RAM);
 
+	_extram_start = ADDR(.bss.extram);
+	_extram_end = ADDR(.bss.extram) + SIZEOF(.bss.extram);
+
 	_itcm_block_count = (SIZEOF(.text.itcm) + SIZEOF(.ARM.exidx) + 0x7FFF) >> 15;
 	_flexram_bank_config = 0xAAAAAAAA | ((1 << (_itcm_block_count * 2)) - 1);
 	_estack = ORIGIN(DTCM) + ((16 - _itcm_block_count) << 15);
 
 	_flashimagelen = __text_csf_end - ORIGIN(FLASH);
-	_teensy_model_identifier = 0x24;
+	_teensy_model_identifier = 0x25;
 
 	.debug_info     0 : { *(.debug_info) }
 	.debug_abbrev   0 : { *(.debug_abbrev) }

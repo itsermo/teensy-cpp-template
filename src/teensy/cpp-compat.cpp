@@ -11,20 +11,30 @@ void __cxa_pure_virtual (void) { }
 
 void * operator new(size_t size)
 {
-  return malloc(size);
+	return malloc(size);
 }
 
 void * operator new[](size_t size)
 {
-  return malloc(size);
+	return malloc(size);
 }
 
 void operator delete(void * ptr)
 {
-  free(ptr);
+	free(ptr);
 }
 
 void operator delete[](void * ptr)
 {
-  free(ptr);
+	free(ptr);
+}
+
+void operator delete(void * ptr, size_t size)
+{
+	free(ptr);
+}
+
+void operator delete[](void * ptr, size_t size)
+{
+	free(ptr);
 }

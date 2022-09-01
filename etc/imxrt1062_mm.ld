@@ -3,7 +3,7 @@ MEMORY
 	ITCM (rwx):  ORIGIN = 0x00000000, LENGTH = 512K
 	DTCM (rwx):  ORIGIN = 0x20000000, LENGTH = 512K
 	RAM (rwx):   ORIGIN = 0x20200000, LENGTH = 512K
-	FLASH (rwx): ORIGIN = 0x60000000, LENGTH = 1984K
+	FLASH (rwx): ORIGIN = 0x60000000, LENGTH = 16128K
 }
 
 ENTRY(ImageVectorTable)
@@ -55,7 +55,7 @@ SECTIONS
     		*(.endpoint_queue)    
 		*(SORT_BY_ALIGNMENT(SORT_BY_NAME(.rodata*)))
 		*(SORT_BY_ALIGNMENT(SORT_BY_NAME(.data*)))
-   		 KEEP(*(.vectorsram))
+    		KEEP(*(.vectorsram))	
 	} > DTCM  AT> FLASH
 
 	.bss ALIGN(4) : {
@@ -97,7 +97,7 @@ SECTIONS
 	_estack = ORIGIN(DTCM) + ((16 - _itcm_block_count) << 15);
 
 	_flashimagelen = __text_csf_end - ORIGIN(FLASH);
-	_teensy_model_identifier = 0x24;
+	_teensy_model_identifier = 0x26;
 
 	.debug_info     0 : { *(.debug_info) }
 	.debug_abbrev   0 : { *(.debug_abbrev) }
