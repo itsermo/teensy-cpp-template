@@ -96,11 +96,17 @@ Instead of downloading and installing all the prerequisite components manually, 
 
 On Ubuntu or Debian-based distro:  
 
-      sudo apt-get install cmake gcc-arm-none-eabi
+```
+sudo apt-get install cmake gcc-arm-none-eabi
+```
       
 On Fedora or RHL-based distro:
 
-      sudo dnf install cmake gcc-arm-none-eabi binutils-arm-none-eabi
+```
+sudo dnf install cmake arm-none-eabi-newlib arm-none-eabi-g++-cs arm-none-eabi-gcc-cs
+sudo dnf install libusb-compat-0.1-devel //for teensy loader cli
+```
+
 
 -OR-
 
